@@ -1,51 +1,53 @@
-from backend.cpp_engine import parking_engine
+from backend.cpp_engine import ParkingEngine
 
 
-def main():
-    print("=====================================")
-    print("     PYTHON-C++ BRIDGE TESTS")
-    print("=====================================\n")
+def test_car_fee_from_cpp_engine():
+    engine = ParkingEngine()
 
-    car_fee = parking_engine.calculate_fee(
+    fee = engine.calculate_fee(
         "CAR",
         0.5
     )
 
-    assert car_fee == 50.0
+    assert fee == 50.0
 
-    print(
-        "PASS: Python -> C++ CAR fee = Rs.",
-        car_fee
-    )
 
-    car_fee_two_hours = parking_engine.calculate_fee(
-        "CAR",
-        2.0
-    )
+def test_ev_fee_from_cpp_engine():
+    engine = ParkingEngine()
 
-    assert car_fee_two_hours == 100.0
-
-    print(
-        "PASS: Python -> C++ CAR 2-hour fee = Rs.",
-        car_fee_two_hours
-    )
-
-    ev_fee = parking_engine.calculate_fee(
+    fee = engine.calculate_fee(
         "EV",
         1.2
     )
 
-    assert ev_fee == 150.0
+    assert fee == 150.0
 
-    print(
-        "PASS: Python -> C++ EV fee = Rs.",
-        ev_fee
+
+def test_car_two_hour_fee_from_cpp_engine():
+    engine = ParkingEngine()
+
+    fee = engine.calculate_fee(
+        "CAR",
+        2.0
     )
 
-    print("\n=====================================")
-    print("     PYTHON-C++ BRIDGE WORKING")
-    print("=====================================")
+    assert fee == 100.0
 
 
-if __name__ == "__main__":
-    main()
+def test_invalid_vehicle_type_is_rejected():
+    engine = ParkingEngine()
+
+    try:
+        engine.calculate_fee(
+            "BIKE",
+            1.0
+        )
+
+        assert False, (
+            "Invalid vehicle type should raise ValueError."
+        )
+
+    except ValueError as error:
+        assert str(error) == (
+            "Vehicle type must be CAR or EV."
+        )
